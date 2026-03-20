@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Super Verifica: Calcolo Combinatorio! ⚡</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #f4f1ea;
+            --primary: #FF3366;
+            --secondary: #20b2aa;
+            --yellow: #FFCC00;
+            --black: #1a1a1a;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#d3cebc 2px, transparent 2px);
+            background-size: 20px 20px;
+            color: var(--black);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Patrick Hand', cursive;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            background-color: var(--white);
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0px var(--black);
+            padding: 10px 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            transform: rotate(-1deg);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: var(--primary);
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.5em;
+            padding: 10px 30px;
+            background-color: var(--white);
+            border: 3px solid var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+            cursor: pointer;
+            transition: all 0.1s;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--yellow);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--black);
+        }
+
+        .tab-content {
+            display: none;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .exercise-card {
+            background-color: var(--white);
+            border: 4px solid var(--black);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 6px 6px 0px var(--black);
+            position: relative;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 3px dashed var(--black);
+            padding-bottom: 10px;
+        }
+
+        .ex-number {
+            background-color: var(--primary);
+            color: var(--white);
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.8em;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--black);
+            border-radius: 5px;
+            margin-right: 15px;
+            transform: rotate(-3deg);
+        }
+
+        .ex-text {
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+        
+        .ex-text ol {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .ex-text li {
+            margin-bottom: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2em;
+            padding: 8px 15px;
+            border: 3px solid var(--black);
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--black);
+            transition: all 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px var(--black);
+        }
+
+        .btn-hint { background-color: var(--yellow); }
+        .btn-theory { background-color: #87CEFA; }
+        .btn-solution { background-color: #98FB98; }
+
+        .info-panel {
+            margin-top: 15px;
+            padding: 15px;
+            border: 3px solid var(--black);
+            border-radius: 10px;
+            display: none; /* Nascondi di default */
+            font-size: 1.05em;
+            line-height: 1.4;
+        }
+
+        .info-panel.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-hint { background-color: #fffacd; }
+        .panel-theory { background-color: #e0ffff; }
+        .panel-solution { background-color: #f0fff0; }
+
+        .comic-bubble {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            background-color: var(--yellow);
+            border: 3px solid var(--black);
+            padding: 5px 10px;
+            font-family: 'Patrick Hand', cursive;
+            font-weight: bold;
+            border-radius: 50%;
+            transform: rotate(10deg);
+            box-shadow: 3px 3px 0px var(--black);
+            display: none; /* Attivato via JS per congratulazioni */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>💥 Verifica le Competenze! 💥</h1>
+        <h2>Calcolo Combinatorio</h2>
+    </div>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="openTab('provaA')">🎯 PROVA A</button>
+        <button class="tab-btn" onclick="openTab('provaB')">🚀 PROVA B</button>
+    </div>
+
+    <div id="provaA" class="tab-content active">
+        
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">1</div>
+                <div class="ex-text">
+                    In una classe di 28 alunni e alunne, l'insegnante di matematica vuole scegliere 6 studenti che saranno interrogati nella settimana. In quanti modi può effettuare la scelta?
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> L'ordine in cui vengono scelti gli studenti è importante? Se scelgo prima Mario e poi Anna, oppure prima Anna e poi Mario, il gruppo degli interrogati cambia?
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Quando l'ordine NON è importante e non ci sono ripetizioni, usiamo le <strong>Combinazioni Semplici</strong> \(C_{n,k}\). La formula è data dal coefficiente binomiale: 
+                \[ C_{n,k} = \binom{n}{k} = \frac{n!}{k!(n-k)!} \]
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                L'ordine di estrazione non conta (il gruppo di 6 studenti resta lo stesso indipendentemente da chi viene chiamato per primo). Usiamo quindi le combinazioni semplici di \(n=28\) elementi in classe \(k=6\).<br><br>
+                Calcoliamo:<br>
+                \[ C_{28,6} = \binom{28}{6} = \frac{28!}{6! \cdot (28-6)!} = \frac{28!}{6! \cdot 22!} \]
+                \[ = \frac{28 \cdot 27 \cdot 26 \cdot 25 \cdot 24 \cdot 23}{6 \cdot 5 \cdot 4 \cdot 3 \cdot 2 \cdot 1} = 376\,740 \]
+                L'insegnante ha <strong>376.740</strong> modi diversi per scegliere il gruppo.
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">2</div>
+                <div class="ex-text">
+                    Con le 5 vocali, le 16 consonanti e le 10 cifre decimali, quante sigle di 6 elementi puoi costruire se i primi 2 posti devono essere occupati da vocali diverse seguite da 2 consonanti diverse e infine da un numero di due cifre?
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Dividi il problema in tre "scatole" o "blocchi". Blocco 1: vocali (l'ordine conta!). Blocco 2: consonanti (l'ordine conta!). Blocco 3: un numero di due cifre (attenzione: un "numero di due cifre" va da 10 a 99, non può iniziare con zero!). Poi moltiplica tutto.
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong>
+                In una sigla l'ordine conta, quindi si usano le <strong>Disposizioni Semplici</strong> \(D_{n,k}\) perché gli elementi devono essere diversi.<br>
+                Inoltre, si applica il <strong>Principio fondamentale del calcolo combinatorio (o del prodotto)</strong>: se un'operazione può essere divisa in più fasi, il totale dei modi è il prodotto dei modi di ogni singola fase.
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                Analizziamo i tre blocchi della sigla:<br>
+                1. <strong>Prime 2 posizioni (Vocali diverse):</strong> Ordine importante. Sono disposizioni semplici di 5 elementi in classe 2.<br> 
+                   \( D_{5,2} = 5 \cdot 4 = 20 \).<br>
+                2. <strong>Posizioni 3 e 4 (Consonanti diverse):</strong> Ordine importante. Disposizioni semplici di 16 elementi in classe 2.<br>
+                   \( D_{16,2} = 16 \cdot 15 = 240 \).<br>
+                3. <strong>Ultimi 2 posti (Un numero di due cifre):</strong> I numeri di due cifre vanno da 10 a 99. Sono in totale \( 99 - 10 + 1 = 90 \) numeri.<br><br>
+                Moltiplichiamo le possibilità usando il principio del prodotto:<br>
+                \[ Totale = 20 \cdot 240 \cdot 90 = 432\,000 \]
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">3</div>
+                <div class="ex-text">
+                    Con le prime cinque cifre (da 0 a 4) quanti numeri puoi formare:
+                    <ol type="a">
+                        <li>di tre cifre tutte diverse;</li>
+                        <li>di quattro cifre anche ripetute;</li>
+                        <li>di cinque cifre diverse che iniziano con 4;</li>
+                        <li>di due cifre pari diverse.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> La trappola principale qui è lo <strong>zero</strong>! Un numero non può mai iniziare per 0 (es: "012" non è un numero a tre cifre, ma a due). Ricordatelo per i casi a, b, d.
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong>
+                Avremo bisogno di:
+                <ul>
+                    <li><strong>Disposizioni semplici</strong> (senza ripetizione).</li>
+                    <li><strong>Disposizioni con ripetizione</strong> \(D'_{n,k} = n^k\).</li>
+                    <li><strong>Permutazioni</strong> (quando usiamo tutti gli elementi).</li>
+                </ul>
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> Le cifre a disposizione sono 5: {0, 1, 2, 3, 4}.<br><br>
+                <strong>a) 3 cifre diverse:</strong><br>
+                Centinaia: 4 scelte (non lo zero).<br>
+                Decine: 4 scelte (includo lo zero, ma tolgo quella usata prima).<br>
+                Unità: 3 scelte rimaste.<br>
+                Totale = \( 4 \cdot 4 \cdot 3 = 48 \).<br><br>
+                <strong>b) 4 cifre anche ripetute:</strong><br>
+                Migliaia: 4 scelte (non lo zero).<br>
+                Le altre 3 posizioni: 5 scelte ciascuna (ripetizione permessa).<br>
+                Totale = \( 4 \cdot 5 \cdot 5 \cdot 5 = 4 \cdot 5^3 = 500 \).<br><br>
+                <strong>c) 5 cifre diverse che iniziano con 4:</strong><br>
+                La prima cifra è fissa (il 4). Restano 4 cifre per le 4 posizioni rimanenti.<br>
+                Totale = Permutazioni di 4 elementi = \( P_4 = 4! = 4 \cdot 3 \cdot 2 \cdot 1 = 24 \).<br><br>
+                <strong>d) 2 cifre pari diverse:</strong><br>
+                Le cifre pari nel nostro insieme sono: {0, 2, 4}. Per fare un numero a due cifre non posso iniziare con 0.<br>
+                Decine: deve essere 2 o 4 (2 possibilità).<br>
+                Unità: tra le pari ne restano 2 (zero è ammesso qui).<br>
+                Totale = \( 2 \cdot 2 = 4 \). (I numeri sono 20, 24, 40, 42).
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">4</div>
+                <div class="ex-text">
+                    Determina il sesto termine dello sviluppo di \( (x^2 - y)^{10} \).
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Ricorda che il conteggio dei termini parte da \(k=0\). Quindi il primo termine ha \(k=0\), il secondo ha \(k=1\)... qual è il \(k\) per il <em>sesto</em> termine?
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Per il <strong>Binomio di Newton</strong>, la formula del termine generale di posto \(k+1\) per lo sviluppo di \((A + B)^n\) è:
+                \[ T_{k+1} = \binom{n}{k} A^{n-k} B^k \]
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                Per trovare il sesto termine, dobbiamo usare \( k = 5 \) (perché si parte a contare da 0).<br>
+                I nostri dati sono: \( n = 10 \), \( A = x^2 \), \( B = -y \).<br><br>
+                Applichiamo la formula:<br>
+                \[ T_6 = \binom{10}{5} (x^2)^{10-5} (-y)^5 \]
+                \[ T_6 = \binom{10}{5} (x^2)^5 (-y)^5 \]
+                Calcoliamo il coefficiente binomiale:<br>
+                \[ \binom{10}{5} = \frac{10 \cdot 9 \cdot 8 \cdot 7 \cdot 6}{5 \cdot 4 \cdot 3 \cdot 2 \cdot 1} = 252 \]
+                Sostituiamo e calcoliamo i segni e gli esponenti:<br>
+                \[ T_6 = 252 \cdot x^{10} \cdot (-y^5) = -252 x^{10} y^5 \]
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">5</div>
+                <div class="ex-text">
+                    Allo slalom speciale del campionato del mondo di sci partecipano quaranta atlete. In quanti modi si può formare la classifica delle prime cinque?
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> È una "classifica", quindi arrivare prima è ben diverso dall'arrivare seconda o quinta! L'ordine è fondamentale.
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Quando si estrae un sottoinsieme di \(k\) elementi da un insieme di \(n\) elementi, e <strong>l'ordine conta</strong>, si usano le <strong>Disposizioni Semplici</strong>.<br>
+                \[ D_{n,k} = \frac{n!}{(n-k)!} = n \cdot (n-1) \cdot ... \cdot (n-k+1) \]
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                L'ordine conta assolutamente (le prime 5 posizioni della classifica). Dobbiamo disporre 5 atlete scegliendole da un gruppo di 40.<br>
+                Calcoliamo \( D_{40,5} \):<br>
+                \[ D_{40,5} = 40 \cdot 39 \cdot 38 \cdot 37 \cdot 36 \]
+                \[ = 78\,960\,960 \]
+                Ci sono quasi 79 milioni di possibili podi allargati a 5 posizioni!
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">6</div>
+                <div class="ex-text">
+                    Abbiamo cinque palline nere numerate da 1 a 5 e tre palline bianche numerate da 1 a 3. Determina quanti sono i gruppi ordinati di tre palline diverse che si possono formare avendo:
+                    <ol type="a">
+                        <li>due nere seguite da una bianca;</li>
+                        <li>due nere seguite da una bianca, usando i numeri dispari;</li>
+                        <li>tutte palline con numeri dispari.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Attenzione alle parole chiave! Il testo dice chiaramente "gruppi <strong>ordinati</strong>". Questo ti dice subito quale strumento matematico usare.
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Poiché si richiedono gruppi ordinati di palline diverse, l'ordine è rilevante e non ci sono ripetizioni. Usiamo le <strong>Disposizioni Semplici</strong> e moltiplichiamo i vari eventi indipendenti.
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                Dati: Nere (N) = {1,2,3,4,5}. Bianche (B) = {1,2,3}. Totale palline = 8. Sono richiesti gruppi ordinati.<br><br>
+                
+                <strong>a) Due N seguite da una B:</strong><br>
+                Disposizioni di 2 palline N da un gruppo di 5: \(D_{5,2} = 5 \cdot 4 = 20\).<br>
+                Scelta della pallina B: 3 possibilità.<br>
+                Totale = \( 20 \cdot 3 = 60 \).<br><br>
+
+                <strong>b) Due N seguite da una B, SOLO numeri dispari:</strong><br>
+                Nere dispari: {1, 3, 5} (sono 3 palline).<br>
+                Bianche dispari: {1, 3} (sono 2 palline).<br>
+                Disposizioni di 2 N dispari: \(D_{3,2} = 3 \cdot 2 = 6\).<br>
+                Scelta della B dispari: 2 possibilità.<br>
+                Totale = \( 6 \cdot 2 = 12 \).<br><br>
+
+                <strong>c) Tutte palline con numeri dispari (indipendentemente dal colore):</strong><br>
+                In tutto le palline dispari sono 5 (3 nere + 2 bianche).<br>
+                Dobbiamo formare gruppi ordinati di 3 palline estraendole da queste 5.<br>
+                Totale = \( D_{5,3} = 5 \cdot 4 \cdot 3 = 60 \).
+            </div>
+        </div>
+    </div>
+
+    <div id="provaB" class="tab-content">
+        
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">1</div>
+                <div class="ex-text">
+                    Sviluppa \( (x - 1)^6 \).
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Guarda il segno negativo! Questo significa che i segni dello sviluppo si alterneranno (+, -, +, -, ...). Puoi usare il Triangolo di Tartaglia per trovare velocemente i coefficienti.
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Per il <strong>Binomio di Newton</strong> \((A+B)^n\), i coefficienti sono i numeri della riga \(n\) del Triangolo di Tartaglia (ricorda che la punta è la riga 0). Per \(n=6\), i coefficienti sono: 1, 6, 15, 20, 15, 6, 1.
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                Uso il binomio di Newton con i coefficienti di Tartaglia per la sesta riga (1, 6, 15, 20, 15, 6, 1).<br>
+                Il primo termine \(x\) parte da esponente 6 e scende fino a 0. Il secondo termine \((-1)\) parte da esponente 0 e sale fino a 6 (il che genera l'alternanza dei segni).<br><br>
+                \[ (x - 1)^6 = 1\cdot x^6 \cdot (-1)^0 + 6\cdot x^5 \cdot (-1)^1 + 15\cdot x^4 \cdot (-1)^2 + 20\cdot x^3 \cdot (-1)^3 + 15\cdot x^2 \cdot (-1)^4 + 6\cdot x^1 \cdot (-1)^5 + 1\cdot x^0 \cdot (-1)^6 \]
+                Semplificando calcoli e segni otteniamo:
+                \[ x^6 - 6x^5 + 15x^4 - 20x^3 + 15x^2 - 6x + 1 \]
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">2</div>
+                <div class="ex-text">
+                    Calcola quanti sono gli anagrammi, anche privi di significato, delle parole CAMPING e FOTOGRAFO.
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Conta le lettere! In CAMPING le lettere sono tutte diverse? In FOTOGRAFO ci sono lettere ripetute? Se ci sono ripetizioni, scambiarle tra loro non crea un nuovo anagramma, quindi dovrai "dividere".
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> 
+                Gli anagrammi si calcolano con le <strong>Permutazioni</strong>. <br>
+                Se le \(n\) lettere sono tutte diverse: \( P_n = n! \).<br>
+                Se ci sono lettere che si ripetono \(k_1, k_2\) volte, si usano le Permutazioni con ripetizione: \( P_n^{(k_1, k_2...)} = \frac{n!}{k_1! \cdot k_2! \cdot ...} \)
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                <strong>CAMPING</strong><br>
+                Formata da 7 lettere TUTTE DIVERSE.<br>
+                Uso le permutazioni semplici: \( P_7 = 7! = 7 \cdot 6 \cdot 5 \cdot 4 \cdot 3 \cdot 2 \cdot 1 = 5\,040 \).<br><br>
+                <strong>FOTOGRAFO</strong><br>
+                Formata da 9 lettere in totale. Notiamo delle ripetizioni:<br>
+                La lettera "O" si ripete 3 volte.<br>
+                La lettera "F" si ripete 2 volte.<br>
+                Uso le permutazioni con ripetizione: <br>
+                \[ P_9^{(3,2)} = \frac{9!}{3! \cdot 2!} = \frac{9 \cdot 8 \cdot 7 \cdot 6 \cdot 5 \cdot 4 \cdot 3 \cdot 2 \cdot 1}{(3 \cdot 2 \cdot 1) \cdot (2 \cdot 1)} \]
+                Semplificando il 3! con la coda del 9! e dividendo per 2, otteniamo:<br>
+                \[ \frac{9 \cdot 8 \cdot 7 \cdot 6 \cdot 5 \cdot 4}{2} = 9 \cdot 8 \cdot 7 \cdot 6 \cdot 5 \cdot 2 = 30\,240 \]
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">3</div>
+                <div class="ex-text">
+                    Quanti numeri di quattro cifre distinte si possono formare con le cifre 0, 1, 2, 3, 4, 5, 6? Quanti di essi sono pari? Quanti sono maggiori di 5000?
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Ancora lo zero! Per i numeri pari devi stare molto attento: se il numero finisce con 0 è una situazione, se finisce con 2, 4 o 6 è un'altra (perché lo 0 non l'hai usato alla fine e quindi rischia di finire per sbaglio al primo posto!). Ti conviene calcolare questi due casi separatamente e poi sommarli.
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Problema classico sulle <strong>Disposizioni semplici</strong> con restrizioni posizionali. L'approccio migliore è il metodo dei "casellini", analizzando le posizioni vincolate per prime (la prima cifra e l'ultima).
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> Insieme cifre: {0,1,2,3,4,5,6} (7 cifre). 4 cifre DISTINTE.<br><br>
+                
+                <strong>1. Quanti numeri in totale?</strong><br>
+                Prima cifra (migliaia): 6 opzioni (no 0).<br>
+                Altre posizioni: dispongo le 6 cifre rimaste in 3 posti: \( D_{6,3} = 6 \cdot 5 \cdot 4 \).<br>
+                Totale = \( 6 \cdot 6 \cdot 5 \cdot 4 = 720 \).<br><br>
+
+                <strong>2. Quanti sono pari?</strong><br>
+                Cifre pari finali disponibili: {0, 2, 4, 6}. Dividiamo il problema:<br>
+                <em>Caso A: finisce con 0.</em><br>
+                Quarta cifra: 1 scelta (lo 0).<br>
+                Prime tre cifre: non avendo più lo 0 di mezzo, scelgo liberamente dalle 6 restanti: \( 6 \cdot 5 \cdot 4 = 120 \) numeri.<br>
+                <em>Caso B: finisce con 2, 4 o 6.</em><br>
+                Quarta cifra: 3 scelte.<br>
+                Prima cifra: non può essere 0, non può essere la cifra usata alla fine. Restano 5 scelte.<br>
+                Cifre centrali: scelgo dalle 5 restanti. \( 5 \cdot 4 \).<br>
+                Calcolo: \( 3 \cdot 5 \cdot 5 \cdot 4 = 300 \) numeri.<br>
+                Totale Pari = \( 120 + 300 = 420 \).<br><br>
+
+                <strong>3. Quanti maggiori di 5000?</strong><br>
+                Devono iniziare per 5 o 6 (2 possibilità).<br>
+                Le restanti 3 cifre si scelgono tra le 6 rimanenti: \( 6 \cdot 5 \cdot 4 = 120 \).<br>
+                Totale = \( 2 \cdot 120 = 240 \).
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">4</div>
+                <div class="ex-text">
+                    Calcola in quanti modi diversi 5 ragazzi e 3 ragazze possono occupare una fila di 8 posti al cinema se:
+                    <ol type="a">
+                        <li>le ragazze vogliono stare sempre vicine;</li>
+                        <li>anche i maschi vogliono stare vicini tra loro.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Se delle persone vogliono stare vicine, mettile in un "sacco". Considera questo sacco come se fosse un'unica persona enorme da disporre insieme agli altri. Poi, ricordati che le persone dentro il sacco possono scambiarsi di posto tra di loro!
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Applichiamo la tecnica del "blocco unico" alle <strong>Permutazioni</strong>. Calcoliamo le permutazioni dei blocchi e poi le moltiplichiamo per le permutazioni degli elementi <em>all'interno</em> dei blocchi.
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                <strong>a) Le ragazze vicine:</strong><br>
+                Consideriamo le 3 ragazze come un unico "blocco".<br>
+                Avremo quindi da disporre 6 elementi in totale: i 5 ragazzi singoli + 1 blocco ragazze.<br>
+                Permutazioni dei 6 elementi: \( 6! \).<br>
+                All'interno del blocco, le 3 ragazze possono scambiarsi di posto in \( 3! \) modi.<br>
+                Totale = \( 6! \cdot 3! = 720 \cdot 6 = 4\,320 \).<br><br>
+
+                <strong>b) Anche i maschi vicini:</strong><br>
+                Avremo solo 2 blocchi giganti: il "blocco ragazzi" e il "blocco ragazze".<br>
+                Questi 2 blocchi possono essere disposti in \( 2! \) modi (Prima ragazzi poi ragazze, o viceversa).<br>
+                I ragazzi nel loro blocco permutano in \( 5! \) modi.<br>
+                Le ragazze nel loro blocco permutano in \( 3! \) modi.<br>
+                Totale = \( 2! \cdot 5! \cdot 3! = 2 \cdot 120 \cdot 6 = 1\,440 \).
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">5</div>
+                <div class="ex-text">
+                    Una classe è composta da 17 maschi e 11 femmine. L'insegnante di storia deve interrogare e sorteggia tre persone a caso. Calcola in quanti modi può avvenire l'estrazione per avere:
+                    <ol type="a">
+                        <li>tutte femmine;</li>
+                        <li>tutti maschi;</li>
+                        <li>almeno un maschio.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> "Almeno un maschio" significa che possono esserci 1, 2 o 3 maschi. Calcolarli tutti e sommarli è lungo. Esiste un metodo più veloce: "L'evento complementare". Qual è l'opposto di "almeno un maschio"? 
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> Come nell'esercizio 1, l'ordine di estrazione non conta. Usiamo le <strong>Combinazioni Semplici</strong> \(C_{n,k}\). Per il punto c si sfrutta il calcolo combinatorio per l'evento complementare: \( Casi\ Favorevoli = Casi\ Totali - Casi\ Sfvorevoli \).
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                Totale studenti = 17 + 11 = 28. Estrazione di 3 persone, ordine ininfluente.<br><br>
+                
+                <strong>a) Tutte femmine:</strong><br>
+                Devo scegliere 3 ragazze dal gruppo delle 11.<br>
+                \[ C_{11,3} = \binom{11}{3} = \frac{11 \cdot 10 \cdot 9}{3 \cdot 2 \cdot 1} = 165 \]<br>
+
+                <strong>b) Tutti maschi:</strong><br>
+                Devo scegliere 3 ragazzi dal gruppo dei 17.<br>
+                \[ C_{17,3} = \binom{17}{3} = \frac{17 \cdot 16 \cdot 15}{3 \cdot 2 \cdot 1} = 680 \]<br>
+
+                <strong>c) Almeno un maschio:</strong><br>
+                L'evento opposto a "estrarre almeno un maschio" è "estrarre nessuna maschio", cioè "estrarre tutte femmine" (il caso <em>a</em>).<br>
+                Calcoliamo tutte le terne possibili in assoluto:<br>
+                \[ C_{28,3} = \binom{28}{3} = \frac{28 \cdot 27 \cdot 26}{3 \cdot 2 \cdot 1} = 3\,276 \]<br>
+                Sottraiamo le terne di sole femmine:<br>
+                \[ Almeno\ 1\ maschio = 3\,276 - 165 = 3\,111 \]
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-header">
+                <div class="ex-number">6</div>
+                <div class="ex-text">
+                    Calcola in quanti modi diversi puoi estrarre da un'urna, contenente i 90 numeri del lotto, 3 numeri se l'estrazione è:
+                    <ol type="a">
+                        <li>consecutiva senza reinserimento del numero estratto;</li>
+                        <li>consecutiva con reinserimento del numero estratto;</li>
+                        <li>contemporanea.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-hint" onclick="togglePanel(this, 'hint')">💡 Suggerimento</button>
+                <button class="action-btn btn-theory" onclick="togglePanel(this, 'theory')">📚 Teoria</button>
+                <button class="action-btn btn-solution" onclick="sbloccaSvolgimento(this)">🔒 Svolgimento</button>
+            </div>
+            <div class="info-panel panel-hint">
+                <strong>💡 Pensa a questo:</strong> Questo esercizio è un riassunto perfetto! <br>
+                "Consecutiva" = l'ordine conta. <br>
+                "Senza reinserimento" = senza ripetizioni.<br>
+                "Con reinserimento" = con ripetizioni possibili.<br>
+                "Contemporanea" = l'ordine NON conta (affondi la mano e ne tiri su 3 insieme).
+            </div>
+            <div class="info-panel panel-theory">
+                <strong>📚 Approfondimento:</strong> I tre casi definiscono esattamente tre modelli combinatori:
+                <br>a) Disposizioni semplici \(D_{n,k}\)
+                <br>b) Disposizioni con ripetizione \(D'_{n,k} = n^k\)
+                <br>c) Combinazioni semplici \(C_{n,k}\)
+            </div>
+            <div class="info-panel panel-solution">
+                <strong>✍️ Soluzione:</strong> <br>
+                \(n = 90\) (numeri), \(k = 3\) (estratti).<br><br>
+                
+                <strong>a) Consecutiva senza reinserimento:</strong><br>
+                L'ordine conta, no ripetizioni. (Disposizioni Semplici).<br>
+                \[ D_{90,3} = 90 \cdot 89 \cdot 88 = 704\,880 \]<br>
+
+                <strong>b) Consecutiva con reinserimento:</strong><br>
+                L'ordine conta, sì ripetizioni. (Disposizioni con Ripetizione).<br>
+                \[ D'_{90,3} = 90^3 = 90 \cdot 90 \cdot 90 = 729\,000 \]<br>
+
+                <strong>c) Contemporanea:</strong><br>
+                L'ordine non conta (è come formare una squadra). (Combinazioni Semplici).<br>
+                È uguale ai modi del caso <em>a</em> diviso per i modi di permutare i 3 numeri.<br>
+                \[ C_{90,3} = \frac{90 \cdot 89 \cdot 88}{3!} = \frac{704\,880}{6} = 117\,480 \]
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Funzione per navigare tra Prova A e Prova B
+        function openTab(tabId) {
+            // Nasconde tutte le schede
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Deseleziona tutti i pulsanti
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Attiva la scheda e il pulsante cliccato
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Funzione per mostrare/nascondere i pannelli (Suggerimento, Teoria, Svolgimento)
+        function togglePanel(button, type) {
+            // Trova il div contenitore (la card dell'esercizio)
+            const card = button.closest('.exercise-card');
+            // Cerca il pannello specifico all'interno di questa card
+            const panel = card.querySelector('.panel-' + type);
+            
+            // Seleziona tutti gli altri pannelli nella stessa card per chiuderli
+            const allPanels = card.querySelectorAll('.info-panel');
+            
+            // Se il pannello cliccato è già aperto, lo chiude. Altrimenti chiude gli altri e apre questo.
+            if (panel.classList.contains('show')) {
+                panel.classList.remove('show');
+            } else {
+                allPanels.forEach(p => p.classList.remove('show'));
+                panel.classList.add('show');
+            }
+        }
+		// Nuova funzione per il controllo della password
+        // Variabile globale per ricordare se l'utente ha già inserito la password corretta
+        let soluzioniSbloccate = false;
+
+        async function sbloccaSvolgimento(button) {
+            const card = button.closest('.exercise-card');
+            const panel = card.querySelector('.panel-solution');
+            
+            // Se il pannello è già aperto, lo chiudiamo semplicemente
+            if (panel.classList.contains('show')) {
+                togglePanel(button, 'solution');
+                return;
+            }
+
+            // Se le soluzioni sono GIÀ state sbloccate in precedenza, apriamo il pannello senza chiedere nulla!
+            if (soluzioniSbloccate) {
+                togglePanel(button, 'solution');
+                return;
+            }
+
+            // Se arriviamo qui, è la prima volta. Chiediamo la password.
+            const passwordInserita = prompt("🔒 Inserisci la password segreta per sbloccare tutti gli svolgimenti:");
+            
+            // Se lo studente clicca "Annulla", ci fermiamo
+            if (passwordInserita === null) return;
+
+            try {
+                // Cerchiamo di leggere il file password.txt
+                const response = await fetch('password.txt');
+                
+                if (!response.ok) {
+                    throw new Error("Impossibile leggere il file.");
+                }
+                
+                const passwordCorretta = await response.text();
+
+                // Confrontiamo le password
+                if (passwordInserita.trim() === passwordCorretta.trim()) {
+                    alert("🔓 BOOM! Password corretta! Ora hai accesso a tutti gli svolgimenti.");
+                    
+                    // Memorizziamo che lo sblocco è avvenuto con successo
+                    soluzioniSbloccate = true; 
+
+                    // Opzionale e divertente: cambiamo l'icona di TUTTI i pulsanti svolgimento in un lucchetto aperto!
+                    document.querySelectorAll('.btn-solution').forEach(btn => {
+                        btn.innerHTML = "🔓 Svolgimento";
+                    });
+
+                    // Mostriamo la soluzione del pulsante cliccato
+                    togglePanel(button, 'solution');
+                } else {
+                    alert("❌ Password errata! Ritenta, prof in agguato! 👀");
+                }
+            } catch (error) {
+                alert("⚠️ Errore Tecnico: Impossibile verificare la password.");
+            }
+        }
+    </script>
+</body>
+</html>
